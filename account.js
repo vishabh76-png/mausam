@@ -1,0 +1,1 @@
+const saveButton=document.querySelector('#save-preferences');const saveStatus=document.querySelector('#save-status');saveButton.disabled=false;saveButton.onclick=()=>openPreferences();saveStatus.textContent='Save and restore your choices in My Preferences.';

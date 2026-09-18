@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1425">
+  <title>MAUSAM · Weather for your day</title><link rel="icon" type="image/png" href="mausam-logo.png">
+  <meta name="application-name" content="MAUSAM">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script><script src="api-client.js"></script><script src="script.js" defer></script>
+  <script src="weather.js" defer></script>
+  <script src="presentation.js" defer></script>
+  <script src="account.js" defer></script><script src="preferences.js" defer></script><script src="notifications.js" defer></script>
+  <script src="authority.js" defer></script>
+  <script src="planner.js" defer></script>
+</head>
+<body><div class="launch-brand" aria-hidden="true"><img src="mausam-logo.png" alt=""><strong>MAUSAM</strong><span>A little more prepared.</span></div>
+  <main class="app">
+    <nav class="presentation-bar" aria-label="Presentation controls"><span class="mini-brand"><img src="mausam-logo.png" alt="">MAUSAM</span><div><button id="preferences-shortcut">My Preferences</button><button id="restart-preview">Home</button><button id="fullscreen-preview" hidden>Full screen</button></div></nav>
+    <div class="save-bar"><button id="save-preferences" disabled>Save my preferences</button><p id="save-status" role="status">Open My Preferences to save and restore your choices.</p></div>
+    <p id="presentation-status" class="sr-only" role="status"></p>
+    <!-- Each section is a screen. JavaScript switches the visible section. -->
+    <section id="language-screen" class="screen onboarding" aria-labelledby="brand">
+      <header class="brand">
+        <img class="brand-logo" src="mausam-logo.png" alt="Mausam sun and cloud logo">
+        <h1 id="brand" tabindex="-1">Mausam</h1>
+        <p>Weather intelligence for every Indian</p>
+      </header>
+      <fieldset>
+        <legend>Choose your language / भाषा चुनें</legend>
+        <div id="languages" class="language-grid"></div>
+      </fieldset>
+      <button id="next" class="primary bottom-action" disabled>Next →</button>
+    </section>
+
+    <section id="profile-screen" class="screen onboarding" hidden aria-labelledby="profile-title">
+      <button class="back" data-screen="language-screen" id="profile-back">← Back</button>
+      <h1 id="profile-title" tabindex="-1">Who are you?</h1>
+      <p id="profile-subtitle" class="muted">Let’s personalise your experience</p>
+      <p id="translation-note" class="small muted" hidden>This prototype uses English for this language. Translation can be added later.</p>
+      <fieldset class="profile-fieldset">
+        <legend class="sr-only">Choose your profile</legend>
+        <div id="profiles" class="profile-list"></div>
+      </fieldset>
+      <button id="start" class="primary bottom-action" disabled>Get started</button>
+    </section>
+
+    <section id="dashboard-screen" class="screen dashboard" hidden aria-labelledby="dashboard-title">
+      <header>
+        <div class="dashboard-top"><span class="eyebrow">⚠ MAUSAM COMMAND · PROTOTYPE</span><button class="back" data-screen="profile-screen" aria-label="Change profile">←</button></div>
+        <h1 id="dashboard-title" tabindex="-1">Active Operations</h1>
+        <p class="muted small">3 sample incidents · Demo data</p>
+      </header>
+      <button class="weather-link" id="open-weather">🌤 Open live weather <span>→</span></button>
+      <button class="weather-link" id="manage-authority">Authority workspace →</button>
+      <div class="stats">
+        <div class="stat critical"><strong>1</strong><span>Critical</span></div>
+        <div class="stat high"><strong>1</strong><span>High Alert</span></div>
+        <div class="stat monitoring"><strong>1</strong><span>Monitoring</span></div>
+      </div>
+      <nav class="tabs" aria-label="Operations sections">
+        <button data-tab="Incidents" aria-pressed="true">Incidents</button>
+        <button data-tab="Protocols" aria-pressed="false">Protocols</button>
+        <button data-tab="Resources" aria-pressed="false">Resources</button>
+      </nav>
+      <div id="dashboard-content"></div>
+      <nav class="bottom-nav" aria-label="Dashboard navigation">
+        <button data-nav="Operations" aria-pressed="true"><span>🗺️</span>Operations</button>
+        <button data-nav="Alerts" aria-pressed="false"><span>🚨</span>Alerts</button>
+        <button data-nav="Teams" aria-pressed="false"><span>👮</span>Teams</button>
+        <button data-nav="Comms" aria-pressed="false"><span>📡</span>Comms</button>
+      </nav>
+    </section>
+
+    <section id="weather-screen" class="screen weather-screen" hidden aria-labelledby="weather-title">
+      <header class="weather-header"><button class="back" id="weather-back">← Back</button><span class="live-label">OPEN-METEO WEATHER</span></header>
+      <h1 id="weather-title" tabindex="-1">Your weather, closer.</h1>
+      <p class="muted small">Current conditions and the days ahead</p>
+      <form id="city-form" class="search-form"><label class="sr-only" for="city-input">Search city</label><input id="city-input" placeholder="Search Hisar, Delhi, Mumbai…" required minlength="2" maxlength="100" autocomplete="off"><button type="submit" aria-label="Search city">Search</button></form>
+      <div id="city-results" class="city-results"></div>
+      <div class="weather-controls"><button id="locate">◎ Use my location</button><button id="refresh-weather">↻ Refresh</button><button id="unit-toggle" aria-label="Switch to Fahrenheit">°C / °F</button></div>
+      <p class="small muted location-note">Location is shared with Open-Meteo only when you choose to use it.</p>
+      <p id="weather-status" class="weather-status" role="status" aria-live="polite">Choose a city to get started.</p>
+      <button class="weather-link" id="open-planner">Plan a trip or field task →</button>
+      <div id="authority-weather" aria-live="polite"></div>
+      <div id="weather-content"></div>
+      <footer class="weather-footer">Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> · Model-based estimates.<br>Refreshes every 10 minutes while this screen is open.<br>Official warnings: <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener">India Meteorological Department</a></footer>
+    </section>
+    <section id="authority-screen" class="screen onboarding" hidden aria-labelledby="authority-title">
+      <button class="back" data-screen="profile-screen">← Back to profiles</button>
+      <h1 id="authority-title" tabindex="-1">Disaster Management</h1>
+      <p class="muted">Submit a report, supporting file and expiry date.</p>
+      <p id="authority-status" role="status" class="authority-status"></p>
+      <div id="authority-body"></div>
+    </section>
+    <section id="preferences-screen" class="screen onboarding" hidden aria-labelledby="preferences-title">
+<button class="back" data-screen="language-screen">← Home</button><header class="preferences-heading"><img src="mausam-logo.png" alt=""><div><p class="eyebrow">MADE FOR YOUR DAY</p><h1 id="preferences-title" tabindex="-1">My Preferences</h1></div></header><p class="muted">Home, college or the farm. Keep a weather setup for every part of your day.</p>
+<div class="preferences-account approval-card"><div id="profile-account-info"></div><form id="profile-account-form" class="authority-form"><h2>Your MAUSAM account</h2><p class="small muted">Sign in on any device to access all your saved preferences.</p><label>Username<input name="username" autocomplete="username" required pattern="[A-Za-z0-9_]{3,32}" minlength="3" maxlength="32" placeholder="Choose a username"></label><label>Password<input name="password" type="password" autocomplete="current-password" required minlength="12" maxlength="128" placeholder="At least 12 characters"></label><div class="preset-actions"><button name="action" value="login" class="primary">Sign in</button><button name="action" value="register" class="secondary">Create account</button></div><p class="small muted">Use a unique password and save it in your password manager. Password reset and Google/email verification are not connected yet.</p></form><p id="profile-account-status" role="status"></p></div>
+<div class="saved-heading"><h2>Saved preferences</h2><button id="refresh-presets" class="weather-link">Refresh</button></div><div id="saved-preferences" class="saved-preferences"><p class="muted">Sign in to see your saved setups.</p></div>
+<form id="preferences-form" class="authority-form approval-card"><h2>Save a new preference</h2><label>Preference name<input name="name" required maxlength="60" placeholder="e.g. Home, College, Wheat farm"></label><label>Language<select name="language"><option value="en">English</option><option value="hi">Hindi</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="bn">Bengali</option><option value="mr">Marathi</option><option value="gu">Gujarati</option><option value="kn">Kannada</option><option value="ml">Malayalam</option></select></label><div class="form-grid"><label>Profile<select name="profile"><option value="citizen">Citizen</option><option value="farmer">Farmer</option><option value="authority">Disaster Management</option></select></label><label>Temperature<select name="unit"><option value="C">Celsius</option><option value="F">Fahrenheit</option></select></label></div><label>Search saved city<input id="preference-city-search" placeholder="Type a city name" autocomplete="off" minlength="2" maxlength="100"></label><button id="find-preference-city" class="secondary" type="button">Find city</button><div id="preference-city-results" class="city-results"></div><p id="preferred-city" class="small muted"></p><label class="notification-choice"><input type="checkbox" name="rainAlerts"> Rain notifications for this setup</label><button class="primary">Save preference</button></form><p id="preferences-status" role="status"></p>
+<div class="notification-panel approval-card"><p class="eyebrow">STAY A STEP AHEAD</p><h2>Your notifications</h2><p><strong>Rain heads-up</strong><br>When the next hour’s rain probability reaches 60% for your loaded city.</p><p><strong>Time to leave</strong><br>Before a saved trip, at the reminder time you choose in Plan ahead.</p><p class="small muted">MAUSAM checks these while it is running. Only the loaded preference is monitored. For reminders with the app closed, save the event in your calendar. These are planning reminders, not official disaster alerts.</p><button id="enable-notifications" class="primary">Enable on this device</button><button id="test-notifications" class="weather-link">Send a test notification</button><p id="notification-status" role="status" class="small muted">Permission is needed separately on each device.</p></div>
+</section><section id="planner-screen" class="screen onboarding" hidden aria-labelledby="planner-title">
+      <button class="back" data-screen="weather-screen">← Back to weather</button><h1 id="planner-title" tabindex="-1">Plan ahead</h1><p class="muted" id="planner-place"></p>
+      <p class="small muted">Use city search on the weather screen to choose your destination. Times below use your device’s time zone.</p>
+      <form id="trip-form" class="authority-form">
+        <label>Plan name<input name="title" required maxlength="120" placeholder="College, market visit, field work…"></label>
+        <label>Arrive / start by<input name="arrival" type="datetime-local" required></label>
+        <div class="form-grid"><label>Travel time (minutes)<input name="travel" type="number" min="0" max="1440" value="30" required></label><label>Extra buffer (minutes)<input name="buffer" type="number" min="0" max="240" value="15" required></label></div>
+        <p class="small muted">Enter your route’s travel time. Live traffic is not connected. The extra buffer is your choice; it is not a weather-delay prediction.</p>
+        <label>Notify me before departure<select name="reminder"><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 hour</option><option value="1440">1 day</option></select></label>
+        <label>Calendar app<select name="calendar"><option value="ics">Apple / Outlook / compatible calendar file</option><option value="google">Google Calendar</option></select></label>
+        <button class="primary">Calculate departure</button>
+      </form><p id="planner-status" role="status" class="authority-status"></p><div id="planner-result"></div>
+    </section>
+  </main>
+  <dialog id="details" aria-labelledby="dialog-title">
+    <h2 id="dialog-title"></h2>
+    <p id="dialog-text"></p>
+    <form method="dialog"><button class="primary">Close</button></form>
+  </dialog>
+</body>
+</html>
